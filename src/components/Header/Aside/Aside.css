@@ -1,0 +1,100 @@
+.header-aside ul li{
+    position: relative;
+    display: inline-block;
+    height: 100%;
+    vertical-align: middle;
+}
+
+.header-aside li button{
+    width: 32px;
+    height: 32px;
+    padding: 0 4px;
+}
+.profile-border{
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    border: 1px solid #e1e2e3;
+    background-color: #fff;
+    display: -webkit-flex;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-justify-content: center;
+    -ms-flex-pack: center;
+    justify-content: center;
+    -webkit-align-items: center;
+    -ms-flex-align: center;
+    align-items: center;
+    overflow: hidden;
+}
+.profile{
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    background-position: 50%;
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-image: url(https://s3.ap-northeast-2.amazonaws.com/wanted-public/profile_default.png), url(https://static.wanted.co.kr/images/profile_default.png);
+}
+
+.header-aside li{
+    width: 40px;
+    height: 28px;
+}
+.header-aside .left-division{
+    width: fit-content;
+    display: -webkit-inline-flex;
+    display: -ms-inline-flexbox;
+    display: inline-flex;
+    position: relative;
+    height: 100%;
+    vertical-align: middle;
+}
+
+.left-division::before{
+    display: block;
+    content: "";
+    width: 1px;
+    height: 10px;
+    background-color: #e1e2e3;
+    margin: auto 10px;
+}
+.link-company-service{
+    font-size: 13px;
+    color: #666;
+    line-height: 30px;
+    height: 30px;
+    border: 1px solid #e1e2e3;
+    border-radius: 15px;
+    padding: 0 10px;
+    margin-left: 15px;
+    font-weight: 400;
+    display: inline-block;
+    vertical-align: bottom;
+}
+
+
+.badge-new-content{
+    display: -webkit-inline-flex;
+    display: -ms-inline-flexbox;
+    display: inline-flex;
+    background:var(--color_main);
+    -webkit-align-items: center;
+    -ms-flex-align: center;
+    align-items: center;
+    -webkit-justify-content: center;
+    -ms-flex-pack: center;
+    justify-content: center;
+    border-radius: 5px;
+    font-size: 14px;
+    color: #333;
+    font-weight: 600;
+    line-height: 1;
+    position: absolute;
+    padding: 0!important;
+    top: -4px;
+    left: 24px;
+    background-color: rgb(51, 102, 255);
+    width: 13px;
+    height: 13px;
+}
