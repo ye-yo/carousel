@@ -67,6 +67,11 @@
 
 .btn-prev{
     transform: rotate(180deg);
+    left : calc((100% - 1200px) / 2)
+}
+
+.btn-next{
+    right: calc((100% - 1200px) / 2);
 }
 
 

@@ -1,8 +1,7 @@
 import './Slider.css';
 import './SliderItem.css';
 import React, { useLayoutEffect, useRef, useEffect, useState } from "react";
-import { ReactComponent as ArrowIcon } from '../../assets/icons/ic_arrow.svg'
-
+import SlideButton from './SlideButton'
 
 function useWindowSize() {
     const [size, setSize] = useState([0, 0]);
@@ -20,12 +19,10 @@ function useWindowSize() {
 function useInterval(callback, delay) {
     const savedCallback = useRef();
 
-    // Remember the latest callback.
     useEffect(() => {
         savedCallback.current = callback;
     }, [callback]);
 
-    // Set up the interval.
     useEffect(() => {
         function tick() {
             savedCallback.current();
@@ -36,6 +33,7 @@ function useInterval(callback, delay) {
         }
     }, [delay]);
 }
+
 function Slider() {
     const [windowWidth, windowHeight] = useWindowSize();
     const items = ['#33a', '#8c9', '#f3e074',]
@@ -54,11 +52,17 @@ function Slider() {
     const [slideTransition, setTransition] = useState(transitionStyle);
     const [isSwiping, setIsSwiping] = useState(false);
 
-    let firstTwoItem = items.slice(-2);
-    let lastTwoItem = items.slice(0, 2);
-    firstTwoItem = firstTwoItem.length < 2 ? [...firstTwoItem, ...firstTwoItem] : firstTwoItem;
-    lastTwoItem = lastTwoItem.length < 2 ? [...lastTwoItem, ...lastTwoItem] : lastTwoItem;
-    const slides = [...firstTwoItem, ...items, ...lastTwoItem]
+
+    const slides = setSlides();
+
+    function setSlides() {
+        let firstTwoItem = items.slice(-2);
+        let lastTwoItem = items.slice(0, 2);
+        firstTwoItem = firstTwoItem.length < 2 ? [...firstTwoItem, ...firstTwoItem] : firstTwoItem;
+        lastTwoItem = lastTwoItem.length < 2 ? [...lastTwoItem, ...lastTwoItem] : lastTwoItem;
+        return [...firstTwoItem, ...items, ...lastTwoItem];
+    }
+
     useInterval(() => {
         handleSlide(currentIndex + 1)
     }, !isSwiping ? 2000 : null)
@@ -88,7 +92,7 @@ function Slider() {
         setCurrentIndex(index);
     }
 
-    function getOriginIndex(index) {
+    function getItemIndex(index) {
         if (index < 2) {
             index += itemSize - 2
         }
@@ -100,20 +104,39 @@ function Slider() {
         }
         return index;
     }
+
+    function prevSlide() {
+        setIsSwiping(true);
+        handleSlide(currentIndex - 1)
+    }
+
+    function nextSlide() {
+        setIsSwiping(true);
+        handleSlide(currentIndex + 1)
+    }
+
     return (
         <div className="slider-area">
             <div className="slider">
-                <button className="btn-slide-control btn-prev" onMouseOver={() => setIsSwiping(true)} onMouseOut={() => setIsSwiping(false)} onClick={() => { setIsSwiping(true); handleSlide(currentIndex - 1) }} style={{ left: (windowWidth - newItemWidth) / 2 - 60 }}><ArrowIcon width="16" height="16" fill="#333" /></button>
-                <button className="btn-slide-control btn-next" onMouseOver={() => setIsSwiping(true)} onMouseOut={() => setIsSwiping(false)} onClick={() => { setIsSwiping(true); handleSlide(currentIndex + 1) }} style={{ right: (windowWidth - newItemWidth) / 2 - 60 }}><ArrowIcon width="16" height="16" fill="#333" /></button>
+                <SlideButton direction="prev" onClick={prevSlide} />
+                <SlideButton direction="next" onClick={nextSlide} />
                 <div className="slider-list" style={{ padding: sliderPaddingStyle }}>
-                    <div className="slider-track" style={{ width: newTrackWidth || 'auto', transform: `translateX(${(posX || currentIndex * newItemWidth * -1) + initPosX}px)`, transition: slideTransition }}>
+                    <div className="slider-track"
+                        onMouseOver={() => setIsSwiping(true)}
+                        onMouseOut={() => setIsSwiping(false)}
+                        style={{
+                            width: newTrackWidth || 'auto',
+                            transform: `translateX(${(posX || currentIndex * newItemWidth * -1) + initPosX}px)`,
+                            transition: slideTransition
+                        }}>
                         {
                             slides.map((_, i) => {
-                                return getOriginIndex(i)
-                            }).map((number, i) =>
-                                <div key={i} className={`slider-item ${currentIndex} ${i} ${number} ${currentIndex - 2 === number ? 'current-slide' : ''}`} style={{ width: newItemWidth || 'auto' }} >
+                                return getItemIndex(i)
+                            }).map((itemIndex, slideIndex) =>
+                                <div key={slideIndex} className={`slider-item ${currentIndex - 2 === itemIndex ? 'current-slide' : ''}`}
+                                    style={{ width: newItemWidth || 'auto' }} >
                                     <a>
-                                        <div style={{ background: items[number] }}>{number}({i})</div>
+                                        <div style={{ background: items[itemIndex] }}>{itemIndex}({slideIndex})</div>
                                         {/* <img src="https://static.wanted.co.kr/images/banners/1460/619f3af7.jpg"></img> */}
                                     </a>
                                 </div>
