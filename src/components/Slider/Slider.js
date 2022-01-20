@@ -18,7 +18,6 @@ function useWindowSize() {
 
 function useInterval(callback, delay) {
     const savedCallback = useRef();
-
     useEffect(() => {
         savedCallback.current = callback;
     }, [callback]);
@@ -41,17 +40,17 @@ function Slider() {
     const slideLength = itemSize + 4;
     const sliderPadding = 40;
     const sliderPaddingStyle = `0 ${sliderPadding}px`;
-    let newItemWidth = windowWidth * 0.9 - (sliderPadding * 2)
-    newItemWidth = newItemWidth > 1060 ? 1060 : newItemWidth;
+    const newItemWidth = getNewItemWidth();
     const newTrackWidth = newItemWidth * (slideLength);
     const initPosX = - sliderPadding + windowWidth / 2 - newItemWidth / 2;
     const transitionTime = 500;
     const transitionStyle = `transform ${transitionTime}ms ease 0s`;
+
     const [currentIndex, setCurrentIndex] = useState(2)
     const [posX, setPosX] = useState(0);
     const [slideTransition, setTransition] = useState(transitionStyle);
     const [isSwiping, setIsSwiping] = useState(false);
-
+    let isResizing = false;
 
     const slides = setSlides();
 
@@ -63,33 +62,64 @@ function Slider() {
         return [...firstTwoItem, ...items, ...lastTwoItem];
     }
 
+    function getNewItemWidth() {
+        let itemWidth = windowWidth * 0.9 - (sliderPadding * 2)
+        itemWidth = itemWidth > 1060 ? 1060 : itemWidth;
+        return itemWidth;
+    }
+
+    function getPosX(index) {
+        var posX = -1 * (newItemWidth * index);
+        posX = posX === 0 ? initPosX : posX;
+        posX += initPosX;
+        return posX;
+    }
+
+    useEffect(() => {
+        isResizing = true;
+        setIsSwiping(true);
+        setTransition('')
+        setPosX(0)
+        setTimeout(() => {
+            isResizing = false;
+            if (!isResizing)
+                setIsSwiping(false)
+        }, 1000);
+    }, [windowWidth])
+
     useInterval(() => {
         handleSlide(currentIndex + 1)
     }, !isSwiping ? 2000 : null)
 
-    function reset(index) {
+    function changeSlide(index) {
         setTimeout(() => {
             setTransition('');
-            setPosX(-1 * (newItemWidth * index));
+            setPosX(getPosX(index));
         }, transitionTime)
     }
-    function getPosX(index) {
-        var posX = -1 * (newItemWidth * index);
-        posX = posX === 0 ? initPosX : posX;
-        return posX;
-    }
+
     function handleSlide(index) {
         setPosX(getPosX(index));
         if (index < 2) {
             index += itemSize;
-            reset(index)
+            changeSlide(index)
         }
         else if (index >= itemSize + 2) {
             index = index - itemSize;
-            reset(index)
+            changeSlide(index)
         }
         setTransition(transitionStyle);
         setCurrentIndex(index);
+    }
+
+    function prevSlide() {
+        setIsSwiping(true);
+        handleSlide(currentIndex - 1)
+    }
+
+    function nextSlide() {
+        setIsSwiping(true);
+        handleSlide(currentIndex + 1)
     }
 
     function getItemIndex(index) {
@@ -105,16 +135,6 @@ function Slider() {
         return index;
     }
 
-    function prevSlide() {
-        setIsSwiping(true);
-        handleSlide(currentIndex - 1)
-    }
-
-    function nextSlide() {
-        setIsSwiping(true);
-        handleSlide(currentIndex + 1)
-    }
-
     return (
         <div className="slider-area">
             <div className="slider">
@@ -126,7 +146,7 @@ function Slider() {
                         onMouseOut={() => setIsSwiping(false)}
                         style={{
                             width: newTrackWidth || 'auto',
-                            transform: `translateX(${(posX || currentIndex * newItemWidth * -1) + initPosX}px)`,
+                            transform: `translateX(${(posX || getPosX(currentIndex))}px)`,
                             transition: slideTransition
                         }}>
                         {
@@ -136,7 +156,9 @@ function Slider() {
                                 <div key={slideIndex} className={`slider-item ${currentIndex - 2 === itemIndex ? 'current-slide' : ''}`}
                                     style={{ width: newItemWidth || 'auto' }} >
                                     <a>
-                                        <div style={{ background: items[itemIndex] }}>{itemIndex}({slideIndex})</div>
+                                        <div style={{ background: items[itemIndex] }}>
+                                            {/* {itemIndex}({slideIndex}) */}
+                                        </div>
                                         {/* <img src="https://static.wanted.co.kr/images/banners/1460/619f3af7.jpg"></img> */}
                                     </a>
                                 </div>
