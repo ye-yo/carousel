@@ -27,16 +27,13 @@
 
 .slider-track{
     position: relative;
-    background-color: rgba(0,0,0.4);
-    -webkit-transform: translate3d(0, 0, 0);
-    -moz-transform: translate3d(0, 0, 0);
-    -ms-transform: translate3d(0, 0, 0);
-    -o-transform: translate3d(0, 0, 0);
     position: relative;
     left: 50%;
     top: 0;
-    display: block;
+    display: flex;
+    flex-direction: row;
     text-align: left;
+    width: fit-content;
     /* transition: -webkit-transform 500ms ease 0s; */
     /* transition: transform 500ms ease 0s; */
 }

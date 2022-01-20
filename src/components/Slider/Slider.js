@@ -37,14 +37,11 @@ function Slider() {
     const [windowWidth, windowHeight] = useWindowSize();
     const items = ['#33a', '#8c9', '#f3e074',]
     const itemSize = items.length;
-    const slideLength = itemSize + 4;
     const sliderPadding = 40;
     const sliderPaddingStyle = `0 ${sliderPadding}px`;
     const newItemWidth = getNewItemWidth();
-    const newTrackWidth = newItemWidth * (slideLength);
     const transitionTime = 500;
     const transitionStyle = `transform ${transitionTime}ms ease 0s`;
-
     const [currentIndex, setCurrentIndex] = useState(2)
     const [slideTransition, setTransition] = useState(transitionStyle);
     const [isSwiping, setIsSwiping] = useState(false);
@@ -89,6 +86,7 @@ function Slider() {
     }
 
     function handleSlide(index) {
+        console.log(index)
         setCurrentIndex(index);
         if (index < 2) {
             index += itemSize;
@@ -101,14 +99,9 @@ function Slider() {
         setTransition(transitionStyle);
     }
 
-    function prevSlide() {
+    function onSwipe(direction) {
         setIsSwiping(true);
-        handleSlide(currentIndex - 1)
-    }
-
-    function nextSlide() {
-        setIsSwiping(true);
-        handleSlide(currentIndex + 1)
+        handleSlide(currentIndex + direction)
     }
 
     function getItemIndex(index) {
@@ -127,15 +120,14 @@ function Slider() {
     return (
         <div className="slider-area">
             <div className="slider">
-                <SlideButton direction="prev" onClick={prevSlide} />
-                <SlideButton direction="next" onClick={nextSlide} />
+                <SlideButton direction="prev" onClick={() => onSwipe(-1)} />
+                <SlideButton direction="next" onClick={() => onSwipe(1)} />
                 <div className="slider-list" style={{ padding: sliderPaddingStyle }}>
                     <div className="slider-track"
                         onMouseOver={() => setIsSwiping(true)}
                         onMouseOut={() => setIsSwiping(false)}
                         style={{
-                            width: newTrackWidth || 'auto',
-                            transform: `translateX(${((currentIndex * newItemWidth + newItemWidth / 2) * -1)}px)`,
+                            transform: `translateX(${(-100 / slides.length) * (0.5 + currentIndex)}%)`,
                             transition: slideTransition
                         }}>
                         {
