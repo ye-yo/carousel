@@ -42,12 +42,10 @@ function Slider() {
     const sliderPaddingStyle = `0 ${sliderPadding}px`;
     const newItemWidth = getNewItemWidth();
     const newTrackWidth = newItemWidth * (slideLength);
-    const initPosX = - sliderPadding + windowWidth / 2 - newItemWidth / 2;
     const transitionTime = 500;
     const transitionStyle = `transform ${transitionTime}ms ease 0s`;
 
     const [currentIndex, setCurrentIndex] = useState(2)
-    const [posX, setPosX] = useState(0);
     const [slideTransition, setTransition] = useState(transitionStyle);
     const [isSwiping, setIsSwiping] = useState(false);
     let isResizing = false;
@@ -68,18 +66,10 @@ function Slider() {
         return itemWidth;
     }
 
-    function getPosX(index) {
-        var posX = -1 * (newItemWidth * index);
-        posX = posX === 0 ? initPosX : posX;
-        posX += initPosX;
-        return posX;
-    }
-
     useEffect(() => {
         isResizing = true;
         setIsSwiping(true);
         setTransition('')
-        setPosX(0)
         setTimeout(() => {
             isResizing = false;
             if (!isResizing)
@@ -94,12 +84,12 @@ function Slider() {
     function changeSlide(index) {
         setTimeout(() => {
             setTransition('');
-            setPosX(getPosX(index));
+            setCurrentIndex(index);
         }, transitionTime)
     }
 
     function handleSlide(index) {
-        setPosX(getPosX(index));
+        setCurrentIndex(index);
         if (index < 2) {
             index += itemSize;
             changeSlide(index)
@@ -109,7 +99,6 @@ function Slider() {
             changeSlide(index)
         }
         setTransition(transitionStyle);
-        setCurrentIndex(index);
     }
 
     function prevSlide() {
@@ -146,18 +135,18 @@ function Slider() {
                         onMouseOut={() => setIsSwiping(false)}
                         style={{
                             width: newTrackWidth || 'auto',
-                            transform: `translateX(${(posX || getPosX(currentIndex))}px)`,
+                            transform: `translateX(${((currentIndex * newItemWidth + newItemWidth / 2) * -1)}px)`,
                             transition: slideTransition
                         }}>
                         {
                             slides.map((_, i) => {
                                 return getItemIndex(i)
                             }).map((itemIndex, slideIndex) =>
-                                <div key={slideIndex} className={`slider-item ${currentIndex - 2 === itemIndex ? 'current-slide' : ''}`}
+                                <div key={slideIndex} className={`slider-item ${currentIndex === slideIndex ? 'current-slide' : ''}`}
                                     style={{ width: newItemWidth || 'auto' }} >
                                     <a>
                                         <div style={{ background: items[itemIndex] }}>
-                                            {/* {itemIndex}({slideIndex}) */}
+                                            {itemIndex}({slideIndex})
                                         </div>
                                         {/* <img src="https://static.wanted.co.kr/images/banners/1460/619f3af7.jpg"></img> */}
                                     </a>
