@@ -91,11 +91,11 @@ function Slider() {
 
     function handleSlide(index) {
         setCurrentIndex(index);
-        if (index < 양끝에_추가될_데이터수) {
+        if (index - 양끝에_추가될_데이터수 < 0) {
             index += itemSize;
             replaceSlide(index)
         }
-        else if (index >= itemSize + 양끝에_추가될_데이터수) {
+        else if (index - 양끝에_추가될_데이터수 >= itemSize) {
             index -= itemSize;
             replaceSlide(index)
         }
@@ -108,14 +108,12 @@ function Slider() {
     }
 
     function getItemIndex(index) {
-        if (index < 양끝에_추가될_데이터수) {
-            index += itemSize - 양끝에_추가될_데이터수
+        index -= 양끝에_추가될_데이터수;
+        if (index < 0) {
+            index += itemSize;
         }
-        else if (index >= itemSize + 양끝에_추가될_데이터수) {
-            index -= (itemSize + 양끝에_추가될_데이터수);
-        }
-        else {
-            index -= 양끝에_추가될_데이터수;
+        else if (index >= itemSize) {
+            index -= itemSize;
         }
         return index;
     }
@@ -134,19 +132,21 @@ function Slider() {
                             transition: slideTransition
                         }}>
                         {
-                            slides.map((_, i) => {
-                                return getItemIndex(i)
-                            }).map((itemIndex, slideIndex) =>
-                                <div key={slideIndex} className={`slider-item ${currentIndex === slideIndex ? 'current-slide' : ''}`}
-                                    style={{ width: newItemWidth || 'auto' }} >
-                                    <a href="/">
-                                        <div style={{ background: items[itemIndex] }}>
-                                            {itemIndex}({slideIndex})
+                            slides.map((slide, slideIndex) => {
+                                const itemIndex = getItemIndex(slideIndex);
+                                return (
+                                    <div key={slideIndex} className={`slider-item ${currentIndex === slideIndex ? 'current-slide' : ''}`}
+                                        style={{ width: newItemWidth || 'auto' }} >
+                                        <a >
+                                            <div style={{ background: items[itemIndex] }}>
+                                                {itemIndex}({slideIndex})
                                         </div>
-                                        {/* <img src="https://static.wanted.co.kr/images/banners/1460/619f3af7.jpg"></img> */}
-                                    </a>
-                                </div>
-                            )}
+                                            {/* <img src="https://static.wanted.co.kr/images/banners/1460/619f3af7.jpg"></img> */}
+                                        </a>
+                                    </div>
+                                )
+                            })
+                        }
                     </div>
                 </div>
             </div >
