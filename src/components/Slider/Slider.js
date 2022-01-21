@@ -45,16 +45,20 @@ function Slider() {
     const [currentIndex, setCurrentIndex] = useState(2)
     const [slideTransition, setTransition] = useState(transitionStyle);
     const [isSwiping, setIsSwiping] = useState(false);
-    let isResizing = false;
+    let isResizing = useRef(false);
+    const 양끝에_추가될_데이터수 = 2;
 
-    const slides = setSlides();
-
+    let slides = setSlides();
     function setSlides() {
-        let firstTwoItem = items.slice(-2);
-        let lastTwoItem = items.slice(0, 2);
-        firstTwoItem = firstTwoItem.length < 2 ? [...firstTwoItem, ...firstTwoItem] : firstTwoItem;
-        lastTwoItem = lastTwoItem.length < 2 ? [...lastTwoItem, ...lastTwoItem] : lastTwoItem;
-        return [...firstTwoItem, ...items, ...lastTwoItem];
+        let addedFront = [];
+        let addedLast = [];
+        var index = 0;
+        while (index < 양끝에_추가될_데이터수) {
+            addedLast.push(items[index % items.length])
+            addedFront.unshift(items[items.length - 1 - index % items.length])
+            index++;
+        }
+        return [...addedFront, ...items, ...addedLast];
     }
 
     function getNewItemWidth() {
@@ -64,12 +68,12 @@ function Slider() {
     }
 
     useEffect(() => {
-        isResizing = true;
+        isResizing.current = true;
         setIsSwiping(true);
         setTransition('')
         setTimeout(() => {
-            isResizing = false;
-            if (!isResizing)
+            isResizing.current = false;
+            if (!isResizing.current)
                 setIsSwiping(false)
         }, 1000);
     }, [windowWidth])
@@ -78,7 +82,7 @@ function Slider() {
         handleSlide(currentIndex + 1)
     }, !isSwiping ? 2000 : null)
 
-    function changeSlide(index) {
+    function replaceSlide(index) {
         setTimeout(() => {
             setTransition('');
             setCurrentIndex(index);
@@ -86,15 +90,14 @@ function Slider() {
     }
 
     function handleSlide(index) {
-        console.log(index)
         setCurrentIndex(index);
-        if (index < 2) {
+        if (index < 양끝에_추가될_데이터수) {
             index += itemSize;
-            changeSlide(index)
+            replaceSlide(index)
         }
-        else if (index >= itemSize + 2) {
-            index = index - itemSize;
-            changeSlide(index)
+        else if (index >= itemSize + 양끝에_추가될_데이터수) {
+            index -= itemSize;
+            replaceSlide(index)
         }
         setTransition(transitionStyle);
     }
@@ -105,14 +108,14 @@ function Slider() {
     }
 
     function getItemIndex(index) {
-        if (index < 2) {
-            index += itemSize - 2
+        if (index < 양끝에_추가될_데이터수) {
+            index += itemSize - 양끝에_추가될_데이터수
         }
-        else if (index >= itemSize + 2) {
-            index -= (itemSize + 2);
+        else if (index >= itemSize + 양끝에_추가될_데이터수) {
+            index -= (itemSize + 양끝에_추가될_데이터수);
         }
         else {
-            index -= 2;
+            index -= 양끝에_추가될_데이터수;
         }
         return index;
     }
@@ -136,7 +139,7 @@ function Slider() {
                             }).map((itemIndex, slideIndex) =>
                                 <div key={slideIndex} className={`slider-item ${currentIndex === slideIndex ? 'current-slide' : ''}`}
                                     style={{ width: newItemWidth || 'auto' }} >
-                                    <a>
+                                    <a href="/">
                                         <div style={{ background: items[itemIndex] }}>
                                             {itemIndex}({slideIndex})
                                         </div>
