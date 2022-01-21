@@ -42,11 +42,11 @@ function Slider() {
     const newItemWidth = getNewItemWidth();
     const transitionTime = 500;
     const transitionStyle = `transform ${transitionTime}ms ease 0s`;
-    const [currentIndex, setCurrentIndex] = useState(2)
+    const 양끝에_추가될_데이터수 = 2;
+    const [currentIndex, setCurrentIndex] = useState(양끝에_추가될_데이터수)
     const [slideTransition, setTransition] = useState(transitionStyle);
     const [isSwiping, setIsSwiping] = useState(false);
     let isResizing = useRef(false);
-    const 양끝에_추가될_데이터수 = 2;
 
     let slides = setSlides();
     function setSlides() {
