@@ -7,4 +7,5 @@
     height: 100%;
     border-radius: 4px;
     object-fit: cover;
+    max-height: 300px;
 }

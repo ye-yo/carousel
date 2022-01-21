@@ -35,7 +35,7 @@ function useInterval(callback, delay) {
 
 function Slider() {
     const [windowWidth, windowHeight] = useWindowSize();
-    const items = ['#33a', '#8c9', '#f3e074',]
+    const items = ['/images/1.jpg', '/images/2.jpg', '/images/3.jpg',]
     const itemSize = items.length;
     const sliderPadding = 40;
     const sliderPaddingStyle = `0 ${sliderPadding}px`;
@@ -138,10 +138,7 @@ function Slider() {
                                     <div key={slideIndex} className={`slider-item ${currentIndex === slideIndex ? 'current-slide' : ''}`}
                                         style={{ width: newItemWidth || 'auto' }} >
                                         <a >
-                                            <div style={{ background: items[itemIndex] }}>
-                                                {itemIndex}({slideIndex})
-                                        </div>
-                                            {/* <img src="https://static.wanted.co.kr/images/banners/1460/619f3af7.jpg"></img> */}
+                                            <img src={items[itemIndex]} alt={`banner${itemIndex}`} />
                                         </a>
                                     </div>
                                 )
