@@ -41,3 +41,25 @@ header{
     margin-right: 15px;
     padding: 3.5px;
 }
+
+@media (min-width: 768px) and (max-width: 991px){
+
+    .header-wrap{
+        margin: 0 auto;
+        height: 110px;
+    }
+    .header-main{
+        height: 110px;
+    }
+}
+
+@media (max-width: 767px){
+    .header-wrap{
+        height: 60px;
+    }
+    .header-main{
+        height: 60px;
+        width: 100%;
+        padding: 15px 20px;
+    }
+}

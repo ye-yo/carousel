@@ -71,8 +71,6 @@
     right: calc((100% - 1200px) / 2);
 }
 
-
-
 .slider-item div{
     display: flex;
     flex-direction: column;

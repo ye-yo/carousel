@@ -27,3 +27,9 @@
     color: var(--color_main);
     font-size: 10px;
 }
+
+@media (max-width: 767px){
+    .GNB li{
+        display:none;
+    };
+}
